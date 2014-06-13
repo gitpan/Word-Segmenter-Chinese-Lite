@@ -6,12 +6,11 @@ use warnings;
 
 use Encode;
 use Word::Segmenter::Chinese::Lite::Dict qw(wscl_get_dict_default);
-use Data::Dump qw(dump);
 
 require Exporter;
 our @ISA     = qw(Exporter);
 our @EXPORT  = qw(wscl_seg wscl_set_mode);
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 our $WSCL_MODE = 'dict';
 

@@ -4,3 +4,6 @@ Revision history for Perl extension Word::Segmenter::Chinese::Lite.
 	- original version; created by h2xs 1.23 with options
 		-A -X -b 5.8.8 -n Word::Segmenter::Chinese::Lite
 
+0.02  Fri Jun 13 11:34:40 2014
+    - remove Data::Dump
+
