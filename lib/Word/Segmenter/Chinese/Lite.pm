@@ -10,7 +10,7 @@ use Word::Segmenter::Chinese::Lite::Dict qw(wscl_get_dict_default);
 require Exporter;
 our @ISA     = qw(Exporter);
 our @EXPORT  = qw(wscl_seg wscl_set_mode);
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 our $WSCL_MODE = 'dict';
 

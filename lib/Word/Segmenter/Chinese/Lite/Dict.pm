@@ -3,16 +3,18 @@ package Word::Segmenter::Chinese::Lite::Dict;
 use 5.008008;
 use strict;
 use warnings;
+use JSON::XS qw(decode_json);
 
 use Word::Segmenter::Chinese::Lite::Dict::Default;
 
 require Exporter;
-our @ISA = qw(Exporter);
+our @ISA    = qw(Exporter);
 our @EXPORT = qw(wscl_get_dict_default);
 
-sub wscl_get_dict_default
-{
-	return %Word::Segmenter::Chinese::Lite::Dict::Default::DICT_DEFAULT;
+sub wscl_get_dict_default {
+    my $dict_default_hashref =
+      decode_json($Word::Segmenter::Chinese::Lite::Dict::Default::DICT_DEFAULT);
+    return %$dict_default_hashref;
 }
 
 1;

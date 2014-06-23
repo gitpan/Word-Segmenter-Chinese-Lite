@@ -7,3 +7,5 @@ Revision history for Perl extension Word::Segmenter::Chinese::Lite.
 0.02  Fri Jun 13 11:34:40 2014
     - remove Data::Dump
 
+0.03  Mon Jun 23 23:49:16 2014
+	- Change Dict data from Data::Dumper to JSON
