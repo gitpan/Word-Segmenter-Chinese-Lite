@@ -10,7 +10,7 @@ use Word::Segmenter::Chinese::Lite::Dict qw(wscl_get_dict_default);
 require Exporter;
 our @ISA     = qw(Exporter);
 our @EXPORT  = qw(wscl_seg wscl_set_mode);
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 our $WSCL_MODE = 'dict';
 
@@ -32,7 +32,7 @@ sub wscl_seg {
 
 sub wscl_seg_dict {
     my $string          = shift;
-    my $real_max_length = 9;
+    my $real_max_length = shift || 9;
     my %dict            = wscl_get_dict_default();
 
     my $line = decode( 'utf8', $string );
@@ -75,34 +75,29 @@ Word::Segmenter::Chinese::Lite - Split Chinese into words
   my @result = wscl_seg("中华人民共和国成立了oyeah");
   print @result;
 
-=head1 DESCRIPTION
+=head1 METHODS
 
-Support UTF8 string input only.
+=head2 wscl_seg($chinese_article, $max_word_length)
 
+Main method.
 
-=head1 TODOS
-
-1. Optimize dictionary loading speed.
-
-2. Support for custom dictionary.
-
-3. Add overlapping-bigram,bigram,1gram algorithm.
-
-4. Support for specify the maximum word length.
-
-=head2 METHODS
-
-=head1 wscl_seg()
-
-Main methods.
-
-Input a utf8 string which want to de splited.
+Input a chinese article which want to de splited.
 
 Output a list.
 
-=head2 EXPORT
+$chinese_article -- must be utf8 encoding
+
+$max_word_length -- Optional
+
+=head1 EXPORT
 
 no method will be exported by default.
+
+=head1 TODOS
+
+1. Support for custom dictionary.
+
+2. Add overlapping-bigram,bigram,1gram algorithm.
 
 =head1 AUTHOR
 
