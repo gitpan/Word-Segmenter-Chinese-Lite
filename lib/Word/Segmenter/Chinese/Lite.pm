@@ -10,7 +10,7 @@ use Word::Segmenter::Chinese::Lite::Dict qw(wscl_get_dict_default);
 require Exporter;
 our @ISA     = qw(Exporter);
 our @EXPORT  = qw(wscl_seg wscl_set_mode);
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 our $WSCL_MODE = 'dict';
 
@@ -65,15 +65,23 @@ sub wscl_seg_dict {
 1;
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 Word::Segmenter::Chinese::Lite - Split Chinese into words
 
 =head1 SYNOPSIS
 
+  use Encode;
   use Word::Segmenter::Chinese::Lite qw(wscl_seg);
+
   my @result = wscl_seg("中华人民共和国成立了oyeah");
-  print @result;
+  foreach (@result)
+  {
+    print encode( 'utf8', $_ );
+    print "\n";
+  }
 
 =head1 METHODS
 

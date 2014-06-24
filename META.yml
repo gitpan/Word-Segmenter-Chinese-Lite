@@ -19,4 +19,5 @@ no_index:
     - inc
 requires:
   Encode: 0
-version: 0.04
+  JSON::XS: 0
+version: 0.05
