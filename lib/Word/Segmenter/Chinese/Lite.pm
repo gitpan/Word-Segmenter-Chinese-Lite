@@ -10,13 +10,13 @@ use Word::Segmenter::Chinese::Lite::Dict qw(wscl_get_dict_default);
 require Exporter;
 our @ISA     = qw(Exporter);
 our @EXPORT  = qw(wscl_seg wscl_set_mode);
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 our $WSCL_MODE = 'dict';
 
 sub wscl_set_mode {
     my $mode = shift;
-    if ( $mode eq 'dict' or $mode eq 'o-bigram' ) {
+    if ( $mode eq 'dict' or $mode eq 'obigram' or $mode eq 'unigram') {
         $WSCL_MODE = $mode;
     }
     return 0;
@@ -27,7 +27,32 @@ sub wscl_seg {
     if ( $WSCL_MODE eq 'dict' ) {
         return wscl_seg_dict($str);
     }
+    if ( $WSCL_MODE eq 'obigram' ) {
+        return wscl_seg_obigram($str);
+    }
+    if ( $WSCL_MODE eq 'unigram' ) {
+        return wscl_seg_unigram($str);
+    }
     return 0;
+}
+
+sub wscl_seg_unigram
+{
+    my $w = shift;
+    my @r = map { $_ = encode('utf8', $_)} split //,decode('utf8',$w);
+    return @r;
+}
+
+sub wscl_seg_obigram
+{
+	my $w = shift;
+	my @r;
+    for(0..length(decode('utf8',$w)))
+    {
+        my $tmp = encode('utf8', substr(decode('utf8', $w) , $_ ,2));
+		push @r, $tmp;
+    }
+	return @r;
 }
 
 sub wscl_seg_dict {
@@ -48,7 +73,7 @@ sub wscl_seg_dict {
             my $len = $real_max_length - $_;
             my $w = substr( $line, $_ - $real_max_length );
             if ( defined $dict{$len}{$w} ) {
-                unshift @result, $w;
+                unshift @result, encode('utf8', $w);
                 $line =
                   substr( $line, 0, length($line) - ( $real_max_length - $_ ) );
                 last;
@@ -73,17 +98,65 @@ Word::Segmenter::Chinese::Lite - Split Chinese into words
 
 =head1 SYNOPSIS
 
-  use Encode;
-  use Word::Segmenter::Chinese::Lite qw(wscl_seg);
+  use Word::Segmenter::Chinese::Lite qw(wscl_seg wscl_set_mode);
 
   my @result = wscl_seg("中华人民共和国成立了oyeah");
   foreach (@result)
   {
-    print encode( 'utf8', $_ );
-    print "\n";
+    print $_, "\n";
   }
+  # got:
+  # 中华人民共和国
+  # 成立
+  # 了
+  # oyeah
+
+  wscl_set_mode("obigram");
+  my @result = wscl_seg("中华人民共和国成立了");
+  foreach (@result)
+  {
+    print $_, "\n";
+  }
+  # got:
+  # 中华
+  # 华人
+  # 人民
+  # 民共
+  # 共和
+  # 和国
+  # 国成
+  # 成立
+  # 立了
+  # 了
+
+  wscl_set_mode("unigram");
+  my @result = wscl_seg("中华人民共和国");
+  foreach (@result)
+  {
+    print $_, "\n";
+  }
+  # got:
+  # 中
+  # 华
+  # 人
+  # 民
+  # 共
+  # 和
+  # 国
 
 =head1 METHODS
+
+=head2 wscl_set_mode($mode)
+
+Optional.
+
+You can choose modes below.
+
+"dict" : Default. 词典分词，本模块自带词典。
+
+"unigram" : 一元分词。
+
+"obigram" : Overlapping Bigram. 交叉二元分词。
 
 =head2 wscl_seg($chinese_article, $max_word_length)
 
@@ -101,9 +174,6 @@ $max_word_length -- Optional
 
 no method will be exported by default.
 
-=head1 TODOS
-
-1. Support for custom dictionary.
 
 2. Add overlapping-bigram,bigram,1gram algorithm.
 

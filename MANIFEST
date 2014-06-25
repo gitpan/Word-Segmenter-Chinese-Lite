@@ -9,3 +9,4 @@ META.yml			Module YAML meta-data (added by MakeMaker)
 README
 t/Word-Segmenter-Chinese-Lite-00.t
 t/Word-Segmenter-Chinese-Lite-01.t
+t/Word-Segmenter-Chinese-Lite-02.t
