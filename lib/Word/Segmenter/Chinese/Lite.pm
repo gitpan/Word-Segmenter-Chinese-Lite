@@ -6,17 +6,19 @@ use warnings;
 
 use Encode;
 use Word::Segmenter::Chinese::Lite::Dict qw(wscl_get_dict_default);
+use Data::Dump qw(ddx);
 
 require Exporter;
 our @ISA     = qw(Exporter);
 our @EXPORT  = qw(wscl_seg wscl_set_mode);
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 our $WSCL_MODE = 'dict';
+our %WSCL_DICT;
 
 sub wscl_set_mode {
     my $mode = shift;
-    if ( $mode eq 'dict' or $mode eq 'obigram' or $mode eq 'unigram') {
+    if ( $mode eq 'dict' or $mode eq 'obigram' or $mode eq 'unigram' ) {
         $WSCL_MODE = $mode;
     }
     return 0;
@@ -25,6 +27,7 @@ sub wscl_set_mode {
 sub wscl_seg {
     my $str = shift;
     if ( $WSCL_MODE eq 'dict' ) {
+        %WSCL_DICT = wscl_get_dict_default() unless defined $WSCL_DICT{'1'};
         return wscl_seg_dict($str);
     }
     if ( $WSCL_MODE eq 'obigram' ) {
@@ -36,29 +39,25 @@ sub wscl_seg {
     return 0;
 }
 
-sub wscl_seg_unigram
-{
+sub wscl_seg_unigram {
     my $w = shift;
-    my @r = map { $_ = encode('utf8', $_)} split //,decode('utf8',$w);
+    my @r = map { $_ = encode( 'utf8', $_ ) } split //, decode( 'utf8', $w );
     return @r;
 }
 
-sub wscl_seg_obigram
-{
-	my $w = shift;
-	my @r;
-    for(0..length(decode('utf8',$w)))
-    {
-        my $tmp = encode('utf8', substr(decode('utf8', $w) , $_ ,2));
-		push @r, $tmp;
+sub wscl_seg_obigram {
+    my $w = shift;
+    my @r;
+    for ( 0 .. length( decode( 'utf8', $w ) ) ) {
+        my $tmp = encode( 'utf8', substr( decode( 'utf8', $w ), $_, 2 ) );
+        push @r, $tmp;
     }
-	return @r;
+    return @r;
 }
 
 sub wscl_seg_dict {
-    my $string          = shift;
+    my $string = shift;
     my $real_max_length = shift || 9;
-    my %dict            = wscl_get_dict_default();
 
     my $line = decode( 'utf8', $string );
     my $len = length($line);
@@ -72,8 +71,8 @@ sub wscl_seg_dict {
         for ( 0 .. $real_max_length - 1 ) {
             my $len = $real_max_length - $_;
             my $w = substr( $line, $_ - $real_max_length );
-            if ( defined $dict{$len}{$w} ) {
-                unshift @result, encode('utf8', $w);
+            if ( defined $WSCL_DICT{$len}{$w} ) {
+                unshift @result, encode( 'utf8', $w );
                 $line =
                   substr( $line, 0, length($line) - ( $real_max_length - $_ ) );
                 last;
@@ -173,9 +172,6 @@ $max_word_length -- Optional
 =head1 EXPORT
 
 no method will be exported by default.
-
-
-2. Add overlapping-bigram,bigram,1gram algorithm.
 
 =head1 AUTHOR
 

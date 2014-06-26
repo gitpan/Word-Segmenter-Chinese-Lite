@@ -21,3 +21,6 @@ Revision history for Perl extension Word::Segmenter::Chinese::Lite.
     - add "obigram" and "unigram" segment mode
 	- add wscl_set_mode method
     - encode output automatic
+
+0.07  Thu Jun 26 15:04:48 2014
+    - fix a small error in doc
