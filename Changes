@@ -24,3 +24,6 @@ Revision history for Perl extension Word::Segmenter::Chinese::Lite.
 
 0.07  Thu Jun 26 15:04:48 2014
     - fix a small error in doc
+
+0.08  Fri Jun 27 11:14:39 2014
+	- remove Data::Dump
